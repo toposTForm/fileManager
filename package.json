@@ -3,13 +3,18 @@
   "version": "1.0.0",
   "description": "rsSchool task",
   "main": "server.js",
+  "engines": {
+    "node": ">=22.14.0",
+    "runtimeExecutable": "C:/nvm4w/nodejs/node.exe"
+  },
   "scripts": {
-    "test": "fmanager -test"
+   "start": "node ./index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/toposTForm/nodejs_basics.git"
   },
+  "type": "module",
   "keywords": [
     "fs",
     "filemanager",
