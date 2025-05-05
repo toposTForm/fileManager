@@ -1,4 +1,4 @@
-Please, use full screen mode for concole (otherwise some table may be corrupt)
+Please, use full screen mode for console (otherwise some table may be corrupt)
 
 please, use for run:
 1. node index.js --username=user_name
