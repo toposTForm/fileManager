@@ -10,7 +10,6 @@ import { compress ,decompress } from './archiveOperations.js';
 import { upDir, cdDir, lsDir, catDir, addDir, mkdirDir, rnDir, cpDir, mvDir, rmDir } from './fileSystemOperations.js';
 import path from 'node:path';
 
-// let promt = readline.createInterface({input: process.stdin, output: process.stdout, promt: '>  '});
 const commands = Object.freeze({
     EXIT: `.exit${EOL}`,
     HELP: `--help${EOL}`,
@@ -59,7 +58,14 @@ export class User {
                     `);
                     console.log('\x1b[33m%s\x1b[0m', `\x1b[7;60H ${userName}! `);
                     console.log('\x1b[9;20H', `You are currently in ${User.workDir}` + EOL);
-                    console.log(EOL)
+                    consoleHelp();
+                    console.log(EOL);
+                    console.log(EOL);
+                    console.log(EOL);
+                    console.log(EOL);
+                    console.log(EOL);
+                    console.log(EOL);
+                    console.log(EOL);
                 }else {
                     console.log('\x1b[033\x1b[1m', `\x1b[5;0H   
                         ┌──────────────────────────────────────────────────────────┐
@@ -143,23 +149,8 @@ process.stdin.on('data', data => {
             process.exit(0);
             break;
         case commands.HELP:
-            console.log('\x1b[33m%s\x1b[0m', 'Operation System Info');
-            console.table({command: ['--help', 'os --EOL', 'os --cpus', 'os --homedir', 'os --username', 'os --architecture'],
-                 description: ['print commands', 'print system End-Of-Line', 'print CPU info', "print home directory", 'system user name', 'CPU architecture']});
-            console.log('\x1b[33m%s\x1b[0m', 'Crypto');
-            console.table({command: ['hash path_to_file'], description: ['calculate hash for file']});
-            console.log('\x1b[33m%s\x1b[0m', 'Archive Operations');
-            console.table({command: ['compress path_to_file path_to_destination', 'decompress path_to_file path_to_destination'], 
-                description: ['Compress file (using Brotli algorithm)', 'Decompress file (using Brotli algorithm)']});
-            console.log('\x1b[33m%s\x1b[0m', 'Navigation & working directory (nwd) ');
-            console.table({command: ['up', 'cd path_to_directory', 'ls'], 
-                    description: ['Go upper from current directory', 'Go to dedicated folder from current directory', 'Print list of all files and folders']});
-            console.log('\x1b[33m%s\x1b[0m', 'Basic operations with files');
-            console.table({command: ['cat path_to_file', 'add new_file_name', 'mkdir new_directory_name', 'rn path_to_file new_filename'], 
-                description: ['Read file to console', 'Create file in cur. directory', 'Create new directory', 'Rename file']});
-                console.table({command: [ 'cp path_to_file path_to_new_directory', 'mv path_to_file path_to_new_directory', 'rm path_to_file'], 
-                    description: [ 'Copy file', 'Move file', 'Delete file']});                       
-            break;
+        consoleHelp();                    
+        break;
         case commands.OSEOL: {
             console.log('\x1b[33m%s\x1b[0m', `${JSON.stringify(EOL)}`);
         }
@@ -291,3 +282,21 @@ process.on('SIGINT', () => {
 });
 
 
+function consoleHelp(){
+    console.log('\x1b[33m%s\x1b[0m', 'Operation System Info');
+    console.table({command: ['--help', 'os --EOL', 'os --cpus', 'os --homedir', 'os --username', 'os --architecture'],
+         description: ['print commands', 'print system End-Of-Line', 'print CPU info', "print home directory", 'system user name', 'CPU architecture']});
+    console.log('\x1b[33m%s\x1b[0m', 'Crypto');
+    console.table({command: ['hash path_to_file'], description: ['calculate hash for file']});
+    console.log('\x1b[33m%s\x1b[0m', 'Archive Operations');
+    console.table({command: ['compress path_to_file path_to_destination', 'decompress path_to_file path_to_destination'], 
+        description: ['Compress file (using Brotli algorithm)', 'Decompress file (using Brotli algorithm)']});
+    console.log('\x1b[33m%s\x1b[0m', 'Navigation & working directory (nwd) ');
+    console.table({command: ['up', 'cd path_to_directory', 'ls'], 
+            description: ['Go upper from current directory', 'Go to dedicated folder from current directory', 'Print list of all files and folders']});
+    console.log('\x1b[33m%s\x1b[0m', 'Basic operations with files');
+    console.table({command: ['cat path_to_file', 'add new_file_name', 'mkdir new_directory_name', 'rn path_to_file new_filename'], 
+        description: ['Read file to console', 'Create file in cur. directory', 'Create new directory', 'Rename file']});
+        console.table({command: [ 'cp path_to_file path_to_new_directory', 'mv path_to_file path_to_new_directory', 'rm path_to_file'], 
+            description: [ 'Copy file', 'Move file', 'Delete file']});    
+}

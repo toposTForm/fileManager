@@ -8,6 +8,7 @@ const compress = async function (filePath)  {
     return new Promise((resolve, reject) => {
         try {
             let inputPath = filePath.split(' ')[0];
+            let inputExt = path.parse(inputPath).ext;
             let inputStream;
             let zipTransform = createBrotliCompress('utf-8');
             let destinationFile;
@@ -24,10 +25,16 @@ const compress = async function (filePath)  {
                     if (destinationFile.ext == ''){
                         destinationFile.name = path.parse(filePath.split(' ')[0]).name + '_brothli_archive'; 
                         destinationFile.ext = path.parse(filePath.split(' ')[0]).ext; 
-                        if (path.parse(path.format(destinationFile)).ext == ''){
+                        if (destinationFile.ext == ''){
                             outputStream = createWriteStream(path.normalize(path.format(destinationFile)) + '\\' +  destinationFile.name + destinationFile.ext);
                         }else{
-                            outputStream = createWriteStream(path.normalize(path.format(destinationFile)));
+                            let temp;
+                            if (destinationFile.base == destinationFile.name){
+                                temp = path.normalize(destinationFile.dir + destinationFile.base + '\\' + destinationFile.name + destinationFile.ext);
+                            }else {
+                                temp = path.normalize(destinationFile.dir + '\\' + destinationFile.name + destinationFile.ext);
+                            }
+                            outputStream = createWriteStream(temp);
                         }
                     } else {
                         outputStream = createWriteStream(path.normalize(path.format(destinationFile)));
@@ -56,6 +63,9 @@ const compress = async function (filePath)  {
                 } else {
                     console.log('\x1b[33m%s\x1b[0m', `${inputPath} archived to ${path.normalize(path.format(destinationFile))}`);
                 }
+            });
+            outputStream.on('error', (error) => {
+                console.error(error);
             });
         } catch (error) {
             console.error(`\x1b[31m%s\x1b[0m`, error);

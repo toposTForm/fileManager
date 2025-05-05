@@ -21,6 +21,9 @@ const calculateHash = async function(filePath) {
                     resolve (hmac.digest('hex'));
                 }
             });
+            input.on('error', (error) => {
+                console.error(error);
+            });
         } catch (error) {
             console.error(`\x1b[31m%s\x1b[0m`, `256 Hash calculation for file ${filePath} generate an error`);
             reject(error);
