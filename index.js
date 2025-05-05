@@ -4,7 +4,7 @@ import { argv } from "node:process";
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { EOL, userInfo } from 'node:os';
-import { cpus } from 'node:os';
+import { cpus, homedir } from 'node:os';
 import { calculateHash } from './hash.js';
 import { compress ,decompress } from './archiveOperations.js';
 import { upDir, cdDir, lsDir, catDir, addDir, mkdirDir, rnDir, cpDir, mvDir, rmDir } from './fileSystemOperations.js';
@@ -41,9 +41,10 @@ export class User {
     static userName;
     static dirname = dirname(fileURLToPath(import.meta.url));
     static curDIr;
-    static workDir = User.dirname.split('\\').map((item, index) => {
-        if (typeof item !== 'undefined' && index < 3) return item;
-    }).filter((item2) => typeof item2 !== 'undefined').join('\\');
+    static workDir = homedir();
+    // static workDir = User.dirname.split('\\').map((item, index) => {
+    //     if (typeof item !== 'undefined' && index < 3) return item;
+    // }).filter((item2) => typeof item2 !== 'undefined').join('\\');
     static parseArgs() {
         argv.forEach((val, index, arr) => {
             if (val.indexOf('--') == 0){
@@ -221,7 +222,7 @@ process.stdin.on('data', data => {
         break;
         case commands.CAT: {    
             Promise.all([catDir(addInfo)]).then((catDir) => {
-                console.log('\x1b[33m%s\x1b[0m', `File's conten read without errors: ${EOL} ${catDir}`);
+                console.log('\x1b[33m%s\x1b[0m', `File's content read without errors: ${EOL} ${catDir}`);
             });
         };
         break;
