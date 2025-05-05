@@ -8,7 +8,6 @@ const compress = async function (filePath)  {
     return new Promise((resolve, reject) => {
         try {
             let inputPath = filePath.split(' ')[0];
-            let inputExt = path.parse(inputPath).ext;
             let inputStream;
             let zipTransform = createBrotliCompress('utf-8');
             let destinationFile;
@@ -30,7 +29,7 @@ const compress = async function (filePath)  {
                         }else{
                             let temp;
                             if (destinationFile.base == destinationFile.name){
-                                temp = path.normalize(destinationFile.dir + destinationFile.base + '\\' + destinationFile.name + destinationFile.ext);
+                                temp = path.normalize(destinationFile.dir + '\\' + destinationFile.base + '\\' + destinationFile.name + destinationFile.ext);
                             }else {
                                 temp = path.normalize(destinationFile.dir + '\\' + destinationFile.name + destinationFile.ext);
                             }
@@ -77,6 +76,7 @@ const decompress = async function decompress(filepath) {
     return new Promise((resolve, reject) => {
         try {
             let inputPath = filepath.split(' ')[0];
+            let outputPath = filepath.split(' ')[1];
             let destinationFile;
             let outputStream;
             let inputStream;
@@ -86,24 +86,20 @@ const decompress = async function decompress(filepath) {
             } else {
                 inputStream = createReadStream(inputPath);
             }
-            if (filepath.split(' ').length == 2){
-                destinationFile = path.parse(filepath.split(' ')[1]);
-                if (!path.isAbsolute(path.format(destinationFile))){
-                    destinationFile = path.parse(path.resolve(User.curDIr, path.format(destinationFile)));
-                    if (destinationFile.ext == ''){
-                        destinationFile.name = path.parse(filepath.split(' ')[0]).name; 
-                        destinationFile.ext = path.parse(filepath.split(' ')[0]).ext; 
-                        if (path.parse(path.format(destinationFile)).ext == ''){
-                            outputStream = createWriteStream(path.normalize(path.format(destinationFile)) + '\\' +  destinationFile.name + destinationFile.ext);
-                        }else{
-                            outputStream = createWriteStream(path.normalize(path.format(destinationFile)));
-                        }
-                    }else{
-                        outputStream = createWriteStream(path.normalize(path.format(destinationFile)));
-                    }
+            if (!path.isAbsolute(outputPath)){
+                outputPath = path.resolve(User.curDIr, outputPath);
+            } 
+            if (filepath.split(' ').length == 2 || outputPath == ''){
+                destinationFile = path.parse(outputPath);
+                destinationFile.ext = path.parse(inputPath).ext;
+                let temp;
+                if (destinationFile.base == destinationFile.name){
+                    destinationFile.name = path.parse(inputPath).name + '_unarchived';
+                    temp = path.normalize(destinationFile.dir + '\\' + destinationFile.base + '\\' + destinationFile.name + destinationFile.ext);
                 } else {
-                    outputStream = createWriteStream(path.normalize(path.format(destinationFile)) );
+                temp = path.normalize(destinationFile.dir + '\\' + destinationFile.name + destinationFile.ext);
                 }
+                outputStream = createWriteStream(temp);
             }else {
                 destinationFile = path.parse(filepath);
                 destinationFile.name = destinationFile.name.replace(/_brothli_archive/i, '');
@@ -118,6 +114,9 @@ const decompress = async function decompress(filepath) {
             outputStream.on('finish', () => {
                 resolve(true);
                 console.log('\x1b[33m%s\x1b[0m', `${filepath} unarchived to ${path.normalize(path.format(destinationFile))}`);
+            });
+            outputStream.on('error', (error) => {
+                console.log(error);
             });
         } catch (error) {
             console.error(`\x1b[31m%s\x1b[0m`, error);
