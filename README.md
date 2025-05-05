@@ -2,7 +2,7 @@ Please, use full screen mode for console (otherwise some table may be corrupt)
 
 please, use for run:
 1. node index.js --username=user_name
-or:
+        or:
 2. npm run start -- --username=user_name
 
 FIrst variant tested for bash and powershell - OK.
